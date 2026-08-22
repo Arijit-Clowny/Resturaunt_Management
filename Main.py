@@ -1,79 +1,456 @@
-#initialize a class that has objects of FoodItems
 class FoodItem:
-    def __init__(self,name,category,type,price):
-        self.name = name    #stores name of the food item example paneer tikka.
-        self.category = category    #stores catagory of the food item example starter.
-        self.type = type    #stores type of the food item example veg.
-        self.price = price  #stores price of the food item example 250.
 
-# Function that has all the starters.
-def starter():
-    choice2 = int(input("Enter :\n1.For veg items.\n2.For non veg items.\n"))   # takes out choice for veg or non veg, 1 for veg and 2 for non veg.
-    if choice2 == 1:
-        vitem1 = FoodItem("Paneer tikka","Starter","Veg",250)
-        vitem2 = FoodItem("Crispy Chilli Baby Corn","Starter","Veg",200)
-        vitem3 = FoodItem("Hara Bhara Kebab","Starter","Veg",160)
-        vitem4 = FoodItem("Veg Manchurian","Starter","Veg",180)
-        vitem5 = FoodItem("Chilli Mushroom","Starter","Veg",220)
-        lv = [vitem1,vitem2,vitem3,vitem4,vitem5]   #list of veg items.
-        for i in lv:    #prints veg items with their price
-            print(i.name," - ",i.price)
-    elif choice2 == 2:
-        nvitem1 = FoodItem("Chicken tikka","Starter","Non Veg",300)
-        nvitem2 = FoodItem("Chilli Chicken","Starter","Non Veg",260)
-        nvitem3 = FoodItem("Fish Fingers","Starter","Non Veg",280)
-        nvitem4 = FoodItem("Chicken 65","Starter","Non Veg",240)
-        nvitem5 = FoodItem("Mutton Seekh Kebab","Starter","Non Veg",380)
-        lnv = [nvitem1,nvitem2,nvitem3,nvitem4,nvitem5] # list of non veg items.
-        for i in lnv:   #prints non veg items with their price
-             print(i.name," - ",i.price)
+    #initialize FoodItems with item name and price.
 
-# Function that has all the main courses.
-def main_course():
-    choice2 = int(input("Enter :\n1.For veg items.\n2.For non veg items.\n"))   # takes out choice for veg or non veg, 1 for veg and 2 for non veg.
-    if choice2 == 1:
-        vitem1 = FoodItem("Soya Chunks Masala","Main Course","Veg",180)
-        vitem2 = FoodItem("Palak Paneer","Main Course","Veg",280)
-        vitem3 = FoodItem("Kadai Paneer","Main Course","Veg",290)
-        vitem4 = FoodItem("Dal Tadka","Main Course","Veg",180)
-        vitem5 = FoodItem("Vegetable Jalfrezi","Main Course","Veg",240)
-        lv = [vitem1,vitem2,vitem3,vitem4,vitem5]   #list of veg items.
-        for i in lv:    #prints veg items with their price
-            print(i.name," - ",i.price)
-    elif choice2 == 2:
-        nvitem1 = FoodItem("Grilled Chicken Breast","Main Course","Non Veg",400)
-        nvitem2 = FoodItem("Chicken Tikka Masala","Main Course","Non Veg",350)
-        nvitem3 = FoodItem("Macher Jhol (Bengali Fish Curry","Main Course","Non Veg",300)
-        nvitem4 = FoodItem("Mutton Rogan Josh","Main Course","Non Veg",450)
-        nvitem5 = FoodItem("Bhuna Gosht","Main Course","Non Veg",480)
-        lnv = [nvitem1,nvitem2,nvitem3,nvitem4,nvitem5] # list of non veg items.
-        for i in lnv:   #prints non veg items with their price
-            print(i.name," - ",i.price)
+    def __init__(self,index,name,price):
+        self.index = index
+        self.name = name    
+        self.price = price  
 
-# Function that has all the dessert.
-def dessert():
+class Order:
 
+    # Initialize order with empty list.
 
+    def __init__(self):
+        self.items = []
 
+    # Initialize food to order with quantity.
 
-print("=" * 100)
-print("\t" * 6, "MENU")
-print("=" * 100 , "\n"*3)
-while(True):
-    choice = int(input("What would tou like to have : \n 1.Starter. \n 2.Main Course. \n3.Bread / Rice \n 4.Dessert. \n 5.View cart. \n 6.Generate Bill. \n 7.exit"))
-    if(choice == 1):
-        starter()
-    elif(choice == 2):
-        main_course()
-    elif(choice == 3):
-        bread_rice()
-    elif(choice == 4):
-        dessert()
-    elif(choice == 5):
-        view_cart()
-    elif(choice == 6):
-        generate_bill()
-    elif(choice == 7):
-        break
-    else:
-        print("Wrong Choice")
+    def add_items(self,food,quantity):
+
+        for item in self.items:
+            if item["food"].name == food.name:
+                item["quantity"] += quantity
+                print(f"Added {quantity} more {food.name} to your order.\n")
+                return
+            
+        self.items.append({"food" : food, "quantity" : quantity})
+        print(f"Added {quantity} x {food.name} to your order.\n")
+
+    # Calculate total price of the order.
+
+    def bill(self):
+
+        total = 0
+
+        for item in self.items:
+            food = item["food"]
+            quantity = item["quantity"]
+
+            total += food.price * quantity
+
+        return total
+
+    # Show order sumary.
+
+    def show_orders(self):
+
+        if not self.items:
+            print("No items in the order.\n")
+            return
+        
+        print("\nYour Order : \n")
+        print("-" * 60)
+
+        for i,item in enumerate(self.items, start = 1):
+
+            food = item["food"]
+            quantity = item["quantity"]
+
+            item_total = food.price * quantity
+
+            print(f"{i} . {food.name} "f"x {quantity} - "f"₹ {item_total}\n")
+
+        print("-" * 60)
+        print(f"Total : ₹{self.bill()}\n")
+
+    # Handel checkout process.
+
+    def checkout(self):
+
+        if not self.items:
+            print("Your cart is empty.\n")
+            return
+        
+        self.show_orders()
+
+        confirm = input("Proceed to checkout ? (yes/no)\n").strip().lower()
+
+        if confirm == "yes":
+            print("Order confirmed!\n",f"Amount paid : ₹{self.bill()}\n","Thank you.\n")
+            self.items.clear()
+
+        else:
+            print("Order cancelled.\n")
+
+#------------------------------------------------------
+# Function to add items from menu and add it to order.
+#------------------------------------------------------
+
+def take_order(menu, order):
+
+    try:
+        choice = int(input("Enter the item number : \n"))
+
+        for item in menu:
+
+            if item.index == choice:
+
+                quantity = int(input(f"Enter quantity of {item.name}: \n"))
+
+                if quantity <= 0:
+                    print("Quantity numst be greater than 0.\n")
+                    return
+                
+                order.add_items(item,quantity)
+                return
+            
+        print("Invalid item number.\n")
+
+    except ValueError:
+        print("Please enter a valid number.\n") 
+
+#------------------------------------------------------
+# Starters.
+#------------------------------------------------------
+
+def starter(order):
+
+    run = True
+
+    while(run):
+
+        try:
+
+            choice2 = int(input("Enter :\n1.For veg items.\n2.For non veg items.\n3.Go back.\nChoice :\n"))
+
+        except ValueError:
+
+            print("Please enter a valid number.\n")
+            continue
+
+        if choice2 == 1:
+
+            vitem1 = FoodItem(1,"Paneer tikka",250)
+            vitem2 = FoodItem(2,"Crispy Chilli Baby Corn",200)
+            vitem3 = FoodItem(3,"Hara Bhara Kebab",160)
+            vitem4 = FoodItem(4,"Veg Manchurian",180)
+            vitem5 = FoodItem(5,"Chilli Mushroom",220)
+
+            # Initialize all veg starters in a list.
+
+            lv = [vitem1,vitem2,vitem3,vitem4,vitem5]
+
+            print("\n---- VEG STARTERS ----")
+
+            for i in lv:
+                print(i.index,".",i.name," - ₹",i.price)
+
+            # Takes order.
+
+            take_order(lv , order)
+    
+        elif choice2 == 2:
+
+            nvitem1 = FoodItem(1,"Chicken tikka",300)
+            nvitem2 = FoodItem(2,"Chilli Chicken",260)
+            nvitem3 = FoodItem(3,"Fish Fingers",280)
+            nvitem4 = FoodItem(4,"Chicken 65",240)
+            nvitem5 = FoodItem(5,"Mutton Seekh Kebab",380)
+
+            # Initialize all non veg starters in a list.
+
+            lnv = [nvitem1,nvitem2,nvitem3,nvitem4,nvitem5]
+
+            print("\n---- NON-VEG STARTERS ----")
+
+            for i in lnv:
+                print(i.index,".",i.name," - ₹",i.price)
+
+            # Takes order.
+
+            take_order(lnv , order)
+
+        elif choice2 == 3:
+
+            run = False
+        else:
+            print("Wrong choice.\n")
+
+#------------------------------------------------------
+# Main courses.
+#------------------------------------------------------
+
+def main_course(order):
+
+    run = True
+
+    while(run):
+
+        try:
+
+            choice2 = int(input("Enter :\n1.For veg items.\n2.For non veg items.\n3.Go back.\n"))
+
+        except ValueError:
+    
+            print("Please enter a valid number.\n")
+            continue
+
+        if choice2 == 1:
+
+            vitem1 = FoodItem(1,"Soya Chunks Masala",180)
+            vitem2 = FoodItem(2,"Palak Paneer",280)
+            vitem3 = FoodItem(3,"Kadai Paneer",290)
+            vitem4 = FoodItem(4,"Dal Tadka",180)
+            vitem5 = FoodItem(5,"Vegetable Jalfrezi",240)
+
+            # Initialize all veg main courses in a list.
+
+            lv = [vitem1,vitem2,vitem3,vitem4,vitem5]
+
+            print("\n---- VEG MAIN COURSES ----")
+
+            for i in lv:
+                print(i.index,".",i.name," - ₹",i.price)
+
+            take_order(lv , order)
+
+        elif choice2 == 2:
+
+            nvitem1 = FoodItem(1,"Grilled Chicken Breast",400)
+            nvitem2 = FoodItem(2,"Chicken Tikka Masala",350)
+            nvitem3 = FoodItem(3,"Macher Jhol (Bengali Fish Curry",300)
+            nvitem4 = FoodItem(4,"Mutton Rogan Josh",450)
+            nvitem5 = FoodItem(5,"Bhuna Gosht",480)
+
+            # Initialize all non veg Main courses in a list.
+
+            lnv = [nvitem1,nvitem2,nvitem3,nvitem4,nvitem5]
+
+            print("\n----NON-VEG MAIN COURSES ----")
+            
+            for i in lnv:
+                print(i.index,".",i.name," - ₹",i.price)
+            
+            take_order(lnv , order)
+
+        elif choice2 == 3:
+
+            return
+        
+        else:
+            print("Wrong Choice\n.")
+
+#------------------------------------------------------
+# Desserts.
+#------------------------------------------------------
+
+def dessert(order):
+
+    run = True
+        
+    while(run):
+        
+        try:
+        
+            choice2 = int(input("Enter :\n1.To order.\n2.Go back.\n"))
+        
+        except ValueError:
+            
+            print("Please enter a valid number.\n")
+            continue
+
+        if choice2 == 1:
+            item1 = FoodItem(1,"Ice cream",110)
+            item2 = FoodItem(2,"Brownie",120)
+            item3 = FoodItem(3,"Gulab jamun with ice cream",160)
+            item4 = FoodItem(4,"Blueberry cheesecake",140)
+            item5 = FoodItem(5,"Rabdi jalebi",120)
+    
+            # Initialize all desserte in a list.
+    
+            l = [item1,item2,item3,item4,item5]
+
+            print("\n---- DESSERTS ----")
+    
+            for i in l:
+                print(i.index,".",i.name," - ₹",i.price)
+
+            take_order(l , order)
+
+        elif choice2 == 2:
+        
+            return
+
+        else:
+
+            print("Wrong choice.\n")
+
+#------------------------------------------------------
+# Bread / Rice.
+#------------------------------------------------------
+
+def bread_rice(order):
+
+    run = True
+            
+    while(run):
+            
+        try:
+            
+            choice2 = int(input("Enter :\n1.To order.\n2.Go back.\n"))
+            
+        except ValueError:
+                
+            print("Please enter a valid number.\n")
+            continue
+    
+        if choice2 == 1:
+
+            item1 = FoodItem(1,"Butter Naan",30)
+            item2 = FoodItem(2,"Naan",20)
+            item3 = FoodItem(3,"Tawa roti",10)
+            item4 = FoodItem(4,"jeera rice",100)
+            item5 = FoodItem(5,"Biryani",160)
+            item6 = FoodItem(6,"Fried rice (veg)",150)
+
+            # Initialize all breads / rice items in a list.
+
+            l = [item1,item2,item3,item4,item5,item6]
+
+            print("\n---- BREAD / RICE ----")
+        
+            for i in l:
+                print(i.index,".",i.name," - ₹",i.price)
+
+            take_order(l , order)
+
+        elif choice2 == 2:
+                
+            return
+        
+        else:
+        
+            print("Wrong choice.\n")
+        
+
+#------------------------------------------------------
+# Drinks function.
+#------------------------------------------------------
+
+def Drinks(order):
+
+    run = True
+                
+    while(run):
+                
+        try:
+                
+            choice2 = int(input("Enter :\n1.To order.\n2.Go back.\n"))
+                
+        except ValueError:
+                    
+            print("Please enter a valid number.\n")
+            continue
+        
+        if choice2 == 1:
+
+            item1 = FoodItem(1,"Cold drinks",90)
+            item2 = FoodItem(2,"Virgin Mojito",120)
+            item3 = FoodItem(3,"Blue lagoon",120)
+            item4 = FoodItem(4,"Lemonade",110)
+            item5 = FoodItem(5,"Lassi",90)
+        
+            # Initialize all Drinks in a list.
+        
+            l = [item1,item2,item3,item4,item5]
+
+            print("\n---- DRINKS ----")
+        
+            for i in l:
+                print(i.index,".",i.name," - ₹",i.price)
+
+            take_order(l , order)
+
+        elif choice2 == 2:
+                        
+            return
+                
+        else:
+                
+            print("Wrong choice.\n")
+
+#------------------------------------------------------
+# Main Function.
+#------------------------------------------------------
+    
+def main():
+
+    # One order object for the entire program.
+    order = Order()
+
+    print("=" * 70)
+    print("\t" * 3, "MENU")
+    print("=" * 70 , "\n"*3)
+
+    while True:
+
+        try:
+
+            choice = int(input("What would you like to have : \n1.Starter. \n2.Main Course. \n3.Bread / Rice \n4.Dessert. \n5.Drinks. \n6.Generate Bill. \n7.Checkout.\n8.Exit.\n\n"))
+
+        except ValueError:
+            print("Please enter a valid number.")
+            continue
+
+        if(choice == 1):
+
+            starter(order)
+            print()
+
+        elif(choice == 2):
+
+            main_course(order)
+            print()
+
+        elif(choice == 3):
+
+            bread_rice(order)
+            print()
+
+        elif(choice == 4):
+
+            dessert(order)
+            print()
+
+        elif(choice == 5):
+
+            Drinks(order)
+            print()
+
+        elif(choice == 6):
+
+            if not order.items:
+
+                print("Your cart is empty.")
+
+            else:
+
+                print("\n========== BILL ==========")
+                order.show_orders()
+                print()
+             
+        elif(choice == 7):
+
+            order.checkout()
+            print()
+
+        elif(choice == 8):
+
+            print("\nThank you for visiting!")
+            break
+
+        else:
+            print("Wrong Choice")
+
+main()
