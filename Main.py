@@ -50,7 +50,7 @@ class Order:
             return
         
         print("\nYour Order : \n")
-        print("-" * 60)
+        print("-" * 42)
 
         for i,item in enumerate(self.items, start = 1):
 
@@ -59,13 +59,11 @@ class Order:
 
             item_total = food.price * quantity
 
-            item_gst = 0.18 * food.price * quantity
+            print(f"{i} . {food.name:<25} "f"x {quantity} - "f"₹ {item_total}")
 
-            print(f"{i} . {food.name} "f"x {quantity} - "f"₹ {item_total}\n")
-            print("GST : "f"₹ {item_gst}\n")
-
-        print("-" * 60)
-        print(f"Total : ₹{self.bill()}\n")
+        print("-" * 42)
+        print("GST : "," " * 25,f"₹{self.bill() * 0.18 :.3f}")
+        print("Total : "," "*23,f"₹{self.bill() + (self.bill() * 0.18 ):.2f}\n")
 
     # Remove n items from cart.
 
@@ -171,7 +169,7 @@ def starter(order):
 
         try:
 
-            choice2 = int(input("\nEnter :\n1.For veg items.\n2.For non veg items.\n3.Go back.\n\n"))
+            choice2 = int(input("\nEnter :\n1.For Veg items.\n2.For Non-Veg.\n3.Go back.\n\n"))
 
         except ValueError:
 
@@ -190,10 +188,12 @@ def starter(order):
 
             lv = [vitem1,vitem2,vitem3,vitem4,vitem5]
 
-            print("\n---- VEG STARTERS ----")
+            print("\n----------- VEG STARTERS -----------")
 
             for i in lv:
-                print(i.index,".",i.name," - ₹",i.price)
+                print(f"{i.index}.{i.name:<25} - ₹ {i.price}")
+
+            print("------------------------------------\n")
 
             # Takes order.
 
@@ -211,10 +211,12 @@ def starter(order):
 
             lnv = [nvitem1,nvitem2,nvitem3,nvitem4,nvitem5]
 
-            print("\n---- NON-VEG STARTERS ----")
+            print("\n--------- NON-VEG STARTERS ---------")
 
             for i in lnv:
-                print(i.index,".",i.name," - ₹",i.price)
+                print(f"{i.index}.{i.name:<25} - ₹ {i.price}")
+
+            print("------------------------------------\n")
 
             # Takes order.
 
@@ -257,10 +259,12 @@ def main_course(order):
 
             lv = [vitem1,vitem2,vitem3,vitem4,vitem5]
 
-            print("\n---- VEG MAIN COURSES ----")
+            print("\n--------- VEG MAIN COURSES ---------")
 
             for i in lv:
-                print(i.index,".",i.name," - ₹",i.price)
+                print(f"{i.index}.{i.name:<25} - ₹ {i.price}")
+
+            print("------------------------------------\n")
 
             take_order(lv , order)
 
@@ -268,7 +272,7 @@ def main_course(order):
 
             nvitem1 = FoodItem(1,"Grilled Chicken Breast",400)
             nvitem2 = FoodItem(2,"Chicken Tikka Masala",350)
-            nvitem3 = FoodItem(3,"Macher Jhol (Bengali Fish Curry",300)
+            nvitem3 = FoodItem(3,"Macher Jhol (Fish Curry)",300)
             nvitem4 = FoodItem(4,"Mutton Rogan Josh",450)
             nvitem5 = FoodItem(5,"Bhuna Gosht",480)
 
@@ -276,10 +280,12 @@ def main_course(order):
 
             lnv = [nvitem1,nvitem2,nvitem3,nvitem4,nvitem5]
 
-            print("\n----NON-VEG MAIN COURSES ----")
+            print("\n------ NON-VEG MAIN COURSES -------")
             
             for i in lnv:
-                print(i.index,".",i.name," - ₹",i.price)
+                print(f"{i.index}.{i.name:<25} - ₹ {i.price}")
+
+            print("-----------------------------------\n")
             
             take_order(lnv , order)
 
@@ -312,7 +318,7 @@ def dessert(order):
         if choice2 == 1:
             item1 = FoodItem(1,"Ice cream",110)
             item2 = FoodItem(2,"Brownie",120)
-            item3 = FoodItem(3,"Gulab jamun with ice cream",160)
+            item3 = FoodItem(3,"Gulab jamun and ice cream",160)
             item4 = FoodItem(4,"Blueberry cheesecake",140)
             item5 = FoodItem(5,"Rabdi jalebi",120)
     
@@ -320,10 +326,12 @@ def dessert(order):
     
             l = [item1,item2,item3,item4,item5]
 
-            print("\n---- DESSERTS ----")
+            print("\n------------- DESSERTS -------------")
     
             for i in l:
-                print(i.index,".",i.name," - ₹",i.price)
+                print(f"{i.index}.{i.name:<25} - ₹ {i.price}")
+
+            print("------------------------------------\n")
 
             take_order(l , order)
 
@@ -367,10 +375,12 @@ def bread_rice(order):
 
             l = [item1,item2,item3,item4,item5,item6]
 
-            print("\n---- BREAD / RICE ----")
+            print("\n----------- BREAD / RICE -----------")
         
             for i in l:
-                print(i.index,".",i.name," - ₹",i.price)
+                print(f"{i.index}.{i.name:<25} - ₹ {i.price}")
+
+            print("------------------------------------\n")
 
             take_order(l , order)
 
@@ -414,10 +424,12 @@ def Drinks(order):
         
             l = [item1,item2,item3,item4,item5]
 
-            print("\n---- DRINKS ----")
+            print("\n-------------- DRINKS --------------")
         
             for i in l:
-                print(i.index,".",i.name," - ₹",i.price)
+                print(f"{i.index}.{i.name:<25} - ₹ {i.price}")
+
+            print("------------------------------------\n")
 
             take_order(l , order)
 
@@ -438,9 +450,9 @@ def main():
     # One order object for the entire program.
     order = Order()
 
-    print("=" * 70)
+    print("=" * 60)
     print("\t" * 3, "MENU")
-    print("=" * 70 , "\n"*3)
+    print("=" * 60 , "\n"*3)
 
     while True:
 
@@ -485,7 +497,7 @@ def main():
 
             else:
 
-                print("\n========== BILL ==========")
+                print("\n================== BILL ==================")
                 order.show_orders()
                 print()
              
@@ -506,4 +518,6 @@ def main():
         else:
             print("Wrong Choice")
 
-main()
+if __name__ == "__main__":
+    m = main()
+    print(m)
