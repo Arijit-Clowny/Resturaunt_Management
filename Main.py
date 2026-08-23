@@ -37,7 +37,7 @@ class Order:
             food = item["food"]
             quantity = item["quantity"]
 
-            total += food.price * quantity
+            total += food.price * quantity + (0.18 * food.price * quantity)
 
         return total
 
@@ -59,10 +59,57 @@ class Order:
 
             item_total = food.price * quantity
 
+            item_gst = 0.18 * food.price * quantity
+
             print(f"{i} . {food.name} "f"x {quantity} - "f"₹ {item_total}\n")
+            print("GST : "f"₹ {item_gst}\n")
 
         print("-" * 60)
         print(f"Total : ₹{self.bill()}\n")
+
+    # Remove n items from cart.
+
+    def remove_item(self):
+
+        if not self.items:
+            print("Your cart is empty.\n")
+            return
+
+        self.show_orders()
+
+        try:
+
+            choice = int(input("Enter the item number you want to remove.\n"))
+
+            if choice < 1 or choice > len(self.items):
+                print("Invalid number.\n")
+                return
+
+            item = self.items[choice - 1]
+            food = item["food"]
+            quantity = item["quantity"]
+
+            remove_quantity = int(input(f"How many {food.name} do you want to remove? \n"))
+
+            if remove_quantity <= 0:
+                print("Quantity must be greater than 0\n")
+                return
+
+            if remove_quantity > quantity:
+                print(f"you have only {quantity} {food.name} in your cart\n")
+                return
+
+            item["quantity"] -= remove_quantity
+
+            if item["quantity"] == 0:
+                self.items.pop(choice - 1)
+                print(f"All {food.name} removed from your cart.\n")
+
+            else:
+                print(f"Removed {remove_quantity} {food.name} from your cart.\n")
+
+        except ValueError:
+            print("Please enter a valid number.\n")
 
     # Handel checkout process.
 
@@ -77,7 +124,9 @@ class Order:
         confirm = input("Proceed to checkout ? (yes/no)\n").strip().lower()
 
         if confirm == "yes":
-            print("Order confirmed!\n",f"Amount paid : ₹{self.bill()}\n","Thank you.\n")
+            print("\nOrder confirmed!!")
+            print(f"Amount paid : ₹{self.bill()}")
+            print("Thank you.")
             self.items.clear()
 
         else:
@@ -122,7 +171,7 @@ def starter(order):
 
         try:
 
-            choice2 = int(input("Enter :\n1.For veg items.\n2.For non veg items.\n3.Go back.\nChoice :\n"))
+            choice2 = int(input("\nEnter :\n1.For veg items.\n2.For non veg items.\n3.Go back.\n\n"))
 
         except ValueError:
 
@@ -189,7 +238,7 @@ def main_course(order):
 
         try:
 
-            choice2 = int(input("Enter :\n1.For veg items.\n2.For non veg items.\n3.Go back.\n"))
+            choice2 = int(input("\nEnter :\n1.For veg items.\n2.For non veg items.\n3.Go back.\n\n"))
 
         except ValueError:
     
@@ -253,7 +302,7 @@ def dessert(order):
         
         try:
         
-            choice2 = int(input("Enter :\n1.To order.\n2.Go back.\n"))
+            choice2 = int(input("\nEnter :\n1.To order.\n2.Go back.\n\n"))
         
         except ValueError:
             
@@ -298,7 +347,7 @@ def bread_rice(order):
             
         try:
             
-            choice2 = int(input("Enter :\n1.To order.\n2.Go back.\n"))
+            choice2 = int(input("\nEnter :\n1.To order.\n2.Go back.\n\n"))
             
         except ValueError:
                 
@@ -335,7 +384,7 @@ def bread_rice(order):
         
 
 #------------------------------------------------------
-# Drinks function.
+# Drinks.
 #------------------------------------------------------
 
 def Drinks(order):
@@ -346,7 +395,7 @@ def Drinks(order):
                 
         try:
                 
-            choice2 = int(input("Enter :\n1.To order.\n2.Go back.\n"))
+            choice2 = int(input("\nEnter :\n1.To order.\n2.Go back.\n\n"))
                 
         except ValueError:
                     
@@ -397,7 +446,7 @@ def main():
 
         try:
 
-            choice = int(input("What would you like to have : \n1.Starter. \n2.Main Course. \n3.Bread / Rice \n4.Dessert. \n5.Drinks. \n6.Generate Bill. \n7.Checkout.\n8.Exit.\n\n"))
+            choice = int(input("What would you like to have : \n1.Starter. \n2.Main Course. \n3.Bread / Rice \n4.Dessert. \n5.Drinks. \n6.Generate Bill. \n7.Checkout. \n8.Remove item. \n9.Exit.\n\n"))
 
         except ValueError:
             print("Please enter a valid number.")
@@ -446,6 +495,10 @@ def main():
             print()
 
         elif(choice == 8):
+            order.remove_item()
+            print()
+
+        elif(choice == 9):
 
             print("\nThank you for visiting!")
             break
