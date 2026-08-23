@@ -16,7 +16,8 @@ The Restaurant Management System allows a customer to:
 - Specify quantities.
 - Automatically combine repeated orders of the same food item.
 - View the current cart/order summary.
-- Calculate the total bill.
+- remove items from the cart
+- Calculate the total bill with gst.
 - Generate/display the bill.
 - Confirm or cancel checkout.
 - Clear the cart after a successful checkout.
