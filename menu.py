@@ -1,5 +1,27 @@
 from models import *
 from order_utils import *
+from database import *
+
+# Converts tuples from database rows to FoodItem object.
+
+def get_food_objects(category, food_type=None):
+
+    rows = food_items_from_db(category, food_type)
+
+    food_items = []
+
+    for row in rows:
+        food = FoodItem(
+            row[0],
+            row[1],
+            row[2],
+            row[3],
+            row[4]
+        )
+
+        food_items.append(food)
+
+    return food_items
 
 #------------------------------------------------------
 # Starters.
@@ -22,49 +44,33 @@ def starter(order):
 
         if choice2 == 1:
 
-            vitem1 = FoodItem(1,"Paneer tikka",250)
-            vitem2 = FoodItem(2,"Crispy Chilli Baby Corn",200)
-            vitem3 = FoodItem(3,"Hara Bhara Kebab",160)
-            vitem4 = FoodItem(4,"Veg Manchurian",180)
-            vitem5 = FoodItem(5,"Chilli Mushroom",220)
+            items = get_food_objects("Starter","Veg")
 
-            # Initialize all veg starters in a list.
+            print("\n------------ VEG STARTERS ------------")
 
-            lv = [vitem1,vitem2,vitem3,vitem4,vitem5]
+            for item in items:
+                print(f"{item.index}.{item.name:<25} - ₹ {item.price}")
 
-            print("\n----------- VEG STARTERS -----------")
-
-            for i in lv:
-                print(f"{i.index}.{i.name:<25} - ₹ {i.price}")
-
-            print("------------------------------------\n")
+            print("--------------------------------------\n")
 
             # Takes order.
 
-            take_order(lv , order)
+            take_order(items , order)
     
         elif choice2 == 2:
 
-            nvitem1 = FoodItem(1,"Chicken tikka",300)
-            nvitem2 = FoodItem(2,"Chilli Chicken",260)
-            nvitem3 = FoodItem(3,"Fish Fingers",280)
-            nvitem4 = FoodItem(4,"Chicken 65",240)
-            nvitem5 = FoodItem(5,"Mutton Seekh Kebab",380)
-
-            # Initialize all non veg starters in a list.
-
-            lnv = [nvitem1,nvitem2,nvitem3,nvitem4,nvitem5]
+            items = get_food_objects("Starter","Non-Veg")
 
             print("\n--------- NON-VEG STARTERS ---------")
 
-            for i in lnv:
-                print(f"{i.index}.{i.name:<25} - ₹ {i.price}")
+            for item in items:
+                print(f"{item.index}.{item.name:<25} - ₹ {item.price}")
 
             print("------------------------------------\n")
 
             # Takes order.
 
-            take_order(lnv , order)
+            take_order(items , order)
 
         elif choice2 == 3:
 
@@ -93,45 +99,29 @@ def main_course(order):
 
         if choice2 == 1:
 
-            vitem1 = FoodItem(1,"Soya Chunks Masala",180)
-            vitem2 = FoodItem(2,"Palak Paneer",280)
-            vitem3 = FoodItem(3,"Kadai Paneer",290)
-            vitem4 = FoodItem(4,"Dal Tadka",180)
-            vitem5 = FoodItem(5,"Vegetable Jalfrezi",240)
-
-            # Initialize all veg main courses in a list.
-
-            lv = [vitem1,vitem2,vitem3,vitem4,vitem5]
+            items = get_food_objects("Main Course","Veg")
 
             print("\n--------- VEG MAIN COURSES ---------")
 
-            for i in lv:
-                print(f"{i.index}.{i.name:<25} - ₹ {i.price}")
+            for item in items:
+                print(f"{item.index}.{item.name:<25} - ₹ {item.price}")
 
             print("------------------------------------\n")
 
-            take_order(lv , order)
+            take_order(items , order)
 
         elif choice2 == 2:
 
-            nvitem1 = FoodItem(1,"Grilled Chicken Breast",400)
-            nvitem2 = FoodItem(2,"Chicken Tikka Masala",350)
-            nvitem3 = FoodItem(3,"Macher Jhol (Fish Curry)",300)
-            nvitem4 = FoodItem(4,"Mutton Rogan Josh",450)
-            nvitem5 = FoodItem(5,"Bhuna Gosht",480)
-
-            # Initialize all non veg Main courses in a list.
-
-            lnv = [nvitem1,nvitem2,nvitem3,nvitem4,nvitem5]
+            items = get_food_objects("Main Course","Non-Veg")
 
             print("\n------ NON-VEG MAIN COURSES -------")
             
-            for i in lnv:
-                print(f"{i.index}.{i.name:<25} - ₹ {i.price}")
+            for item in items:
+                print(f"{item.index}.{item.name:<25} - ₹ {item.price}")
 
             print("-----------------------------------\n")
             
-            take_order(lnv , order)
+            take_order(items , order)
 
         elif choice2 == 3:
 
@@ -160,24 +150,18 @@ def dessert(order):
             continue
 
         if choice2 == 1:
-            item1 = FoodItem(1,"Ice cream",110)
-            item2 = FoodItem(2,"Brownie",120)
-            item3 = FoodItem(3,"Gulab jamun and ice cream",160)
-            item4 = FoodItem(4,"Blueberry cheesecake",140)
-            item5 = FoodItem(5,"Rabdi jalebi",120)
-    
-            # Initialize all desserte in a list.
-    
-            l = [item1,item2,item3,item4,item5]
+
+            items = get_food_objects("Dessert")
+            
 
             print("\n------------- DESSERTS -------------")
     
-            for i in l:
-                print(f"{i.index}.{i.name:<25} - ₹ {i.price}")
+            for item in items:
+                print(f"{item.index}.{item.name:<25} - ₹ {item.price}")
 
             print("------------------------------------\n")
 
-            take_order(l , order)
+            take_order(items , order)
 
         elif choice2 == 2:
         
@@ -208,25 +192,16 @@ def bread_rice(order):
     
         if choice2 == 1:
 
-            item1 = FoodItem(1,"Butter Naan",30)
-            item2 = FoodItem(2,"Naan",20)
-            item3 = FoodItem(3,"Tawa roti",10)
-            item4 = FoodItem(4,"jeera rice",100)
-            item5 = FoodItem(5,"Biryani",160)
-            item6 = FoodItem(6,"Fried rice (veg)",150)
-
-            # Initialize all breads / rice items in a list.
-
-            l = [item1,item2,item3,item4,item5,item6]
+            items = get_food_objects("Bread/Rice")            
 
             print("\n----------- BREAD / RICE -----------")
         
-            for i in l:
-                print(f"{i.index}.{i.name:<25} - ₹ {i.price}")
+            for item in items:
+                print(f"{item.index}.{item.name:<25} - ₹ {item.price}")
 
             print("------------------------------------\n")
 
-            take_order(l , order)
+            take_order(items , order)
 
         elif choice2 == 2:
                 
@@ -258,24 +233,16 @@ def Drinks(order):
         
         if choice2 == 1:
 
-            item1 = FoodItem(1,"Cold drinks",90)
-            item2 = FoodItem(2,"Virgin Mojito",120)
-            item3 = FoodItem(3,"Blue lagoon",120)
-            item4 = FoodItem(4,"Lemonade",110)
-            item5 = FoodItem(5,"Lassi",90)
-        
-            # Initialize all Drinks in a list.
-        
-            l = [item1,item2,item3,item4,item5]
+            items = get_food_objects("Drinks")
 
             print("\n-------------- DRINKS --------------")
         
-            for i in l:
-                print(f"{i.index}.{i.name:<25} - ₹ {i.price}")
+            for item in items:
+                print(f"{item.index}.{item.name:<25} - ₹ {item.price}")
 
             print("------------------------------------\n")
 
-            take_order(l , order)
+            take_order(items , order)
 
         elif choice2 == 2:
                         

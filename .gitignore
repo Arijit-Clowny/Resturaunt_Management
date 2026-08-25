@@ -1,1 +1,5 @@
 Restaurant_Management_System_Roadmap.docx
+.env
+.venv/
+__pycache__/
+*pyc

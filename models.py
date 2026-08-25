@@ -1,11 +1,16 @@
+from decimal import Decimal
+from database import *
+
 class FoodItem:
 
     #initialize FoodItems with item name and price.
 
-    def __init__(self,index,name,price):
+    def __init__(self,index,name,price,category,food_type):
         self.index = index
         self.name = name    
         self.price = price  
+        self.category = category
+        self.food_type = food_type
 
 class Order:
 
@@ -50,7 +55,7 @@ class Order:
             return
         
         print("\nYour Order : \n")
-        print("-" * 42)
+        print("-" * 44)
 
         for i,item in enumerate(self.items, start = 1):
 
@@ -61,9 +66,9 @@ class Order:
 
             print(f"{i} . {food.name:<25} "f"x {quantity} - "f"₹ {item_total}")
 
-        print("-" * 42)
-        print("GST : "," " * 25,f"₹{self.bill() * 0.18 :.3f}")
-        print("Total : "," "*23,f"₹{self.bill() + (self.bill() * 0.18 ):.2f}\n")
+        print("-" * 44)
+        print("GST : "," " * 25,f"₹{self.bill() * Decimal("0.18") :.3f}")
+        print("Total : "," "*23,f"₹{self.bill() + (self.bill() * Decimal("0.18") ):.2f}\n")
 
     # Remove n items from cart.
 
@@ -122,12 +127,40 @@ class Order:
         confirm = input("Proceed to checkout ? (yes/no)\n").strip().lower()
 
         if confirm == "yes":
-            print("\nOrder confirmed!!")
+
             sub_total = self.bill()
-            gst = sub_total * 0.18
+            gst = sub_total * Decimal("0.18")
             total = sub_total + gst
+
+            try:
+
+                order_id = create_order(sub_total,gst,total)
+
+                for item in self.items:
+                    food = item["food"]
+                    quantity = item["quantity"]
+
+                    add_order_item(
+                        order_id,food.index,quantity,food.price
+                    )
+
+                connection.commit()
+
+            except Exception as error:
+
+                connection.rollback()
+
+                print("\nUnable to process your order.")
+                print("Transaction rolled back.")
+                print(f"Error: {error}")
+                return
+
+            print("\nOrder confirmed!!")
+
+            print(f"Oredr ID : {order_id}")
             print(f"Amount paid : ₹{total:.2f}")
             print("Thank you.")
+
             self.items.clear()
 
         else:
