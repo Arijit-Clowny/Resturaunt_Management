@@ -49,9 +49,30 @@ Menu information is now stored in MySQL instead of being hard-coded inside the P
 
 Each food item contains:
 
-```text
-Food ID
-Name
-Price
-Category
-Food Type
+- Food ID
+- Name
+- Price
+- Category
+- Food Type
+
+These values are represented in Python using the `FoodItem` class.
+
+---
+
+## 2. Object-Oriented Programming
+
+The project uses Python OOP concepts to model the restaurant system.
+
+### `FoodItem`
+
+Represents an individual food item.
+
+```python
+class FoodItem:
+
+    def __init__(self, index, name, price, category, food_type):
+        self.index = index
+        self.name = name
+        self.price = price
+        self.category = category
+        self.food_type = food_type
