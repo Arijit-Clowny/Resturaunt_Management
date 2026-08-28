@@ -131,7 +131,7 @@ pip install mysql-connector-python Pillow
 ## ▶️ Running the Application
 
 ```bash
-python app.py
+python main.py
 ```
 
 This launches the Tkinter GUI, from which categories can be browsed, items added to the cart, and orders placed and stored in MySQL.
