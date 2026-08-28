@@ -4,13 +4,25 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-connection = mysql.connector.connect(host = os.getenv("DB_HOST"),user = os.getenv("DB_USER"),password = os.getenv("DB_PASSWORD"),database = os.getenv("DB_NAME"))
 
-cursor = connection.cursor()
+# -------- DATABASE CONNECTION --------
 
-# Gets menu from Mysql.
+def get_connection():
 
-def get_food_items(category , food_type = None):
+    return mysql.connector.connect(
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME")
+    )
+
+
+# -------- GET FOOD ITEMS --------
+
+def get_food_items(category, food_type=None):
+
+    connection = get_connection()
+    cursor = connection.cursor()
 
     query = """
     SELECT food_id, name, price, category, food_type
@@ -21,46 +33,18 @@ def get_food_items(category , food_type = None):
     values = (category,)
 
     if food_type:
-        query += "AND food_type = %s"
+        query += " AND food_type = %s"
         values += (food_type,)
 
-    cursor.execute(query , values)
+    cursor.execute(query, values)
 
-    return cursor.fetchall()
+    rows = cursor.fetchall()
 
-# Converts the menu in FoodItem objects.
-
-def food_items_from_db(category , food_type = None):
-
-    rows = get_food_items(category , food_type)
+    cursor.close()
+    connection.close()
 
     return rows
 
-# Save orders in Mysql.
-
-def create_order(subtotal , gst , total):
-
-    query = """
-    INSERT INTO orders (subtotal, gst, total)
-    VALUES (%s, %s, %s)
-    """
-
-    values = (subtotal, gst, total)
-
-    cursor.execute(query, values)
-
-    return cursor.lastrowid
-
-# Add order items into order.
-
-def add_order_item(order_id, food_id, quantity, price):
-
-    query = """
-    INSERT INTO order_items
-    (order_id, food_id, quantity, price)
-    VALUES (%s, %s, %s, %s)
-    """
-
-    values = (order_id, food_id, quantity, price)
-
-    cursor.execute(query, values)
+def food_items_from_db(category, food_type=None):
+    rows = get_food_items(category, food_type)
+    return rows
