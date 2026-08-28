@@ -94,7 +94,7 @@ The system now includes a full **Tkinter GUI** (`app.py`) built on top of the co
 
 | File | Responsibility |
 |---|---|
-| `app.py` | Main Tkinter application: window setup, header, category navigation, menu rendering |
+| `main.py` | Main Tkinter application: window setup, header, category navigation, menu rendering |
 | `menu.py` | Retrieves food items (as `FoodItem` objects) from MySQL, filtered by category/type |
 | `cart.py` | Cart UI components (quantity controls) and the cart/checkout screen |
 | `order_service.py` | Places orders — writes the order and its line items to MySQL |
