@@ -5,6 +5,7 @@ from menu import get_food_objects
 from cart import create_quantity_control, show_cart
 from config import *
 from order_service import place_order
+from database import get_order_history
 
 
 class ResturantApp:
@@ -585,9 +586,140 @@ class ResturantApp:
 
         show_cart(
             self.menu_frame,
-            place_order
+            place_order,
+            self.create_history_button
+        )
+    # ---------ORDER HISTORY----------
+
+    # --------- ORDER HISTORY ----------
+
+    def view_history(self):
+        self.clear_menu()
+        orders = get_order_history()
+
+        heading = tk.Label(
+            self.menu_frame, text="ORDER HISTORY", font=SECTION_FONT, bg=CARD, fg=TEXT
+        )
+        heading.pack(pady=(0, 20))
+
+        if not orders:
+            tk.Label(
+                self.menu_frame, text="No orders found.", font=BUTTON_FONT, bg=CARD, fg=TEXT
+            ).pack()
+            return
+
+        # --------- GROUP ORDERS ---------
+        grouped_orders = {}
+
+        for row in orders:
+            (order_id, order_date, subtotal, gst, total,
+             food_name, quantity, item_price) = row
+
+            if order_id not in grouped_orders:
+                grouped_orders[order_id] = {
+                    "date": order_date,
+                    "subtotal": subtotal,
+                    "gst": gst,
+                    "total": total,
+                    "items": []
+                }
+
+            grouped_orders[order_id]["items"].append((food_name, quantity, item_price))
+
+        # --------- SCROLLABLE CONTAINER ---------
+        history_container = tk.Frame(self.menu_frame, bg=CARD)
+        history_container.pack(fill="both", expand=True)
+
+        # --------- CANVAS ---------
+        canvas = tk.Canvas(history_container, bg=CARD, highlightthickness=0)
+        canvas.pack(side="left", fill="both", expand=True)
+
+        # --------- SCROLLBAR ---------
+        scrollbar = tk.Scrollbar(history_container, orient="vertical", command=canvas.yview)
+        scrollbar.pack(side="right", fill="y")
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        # --------- FRAME INSIDE CANVAS ---------
+        history_frame = tk.Frame(canvas, bg=CARD)
+        canvas_window = canvas.create_window((0, 0), window=history_frame, anchor="nw")
+
+        # --------- UPDATE SCROLL REGION ---------
+        def update_scroll_region(event=None):
+            canvas.configure(scrollregion=canvas.bbox("all"))
+
+        history_frame.bind("<Configure>", update_scroll_region)
+
+        # --------- MATCH WIDTH ---------
+        def update_width(event):
+            canvas.itemconfig(canvas_window, width=event.width)
+
+        canvas.bind("<Configure>", update_width)
+
+        # --------- DISPLAY ORDERS ---------
+        for order_id, order in grouped_orders.items():
+            order_frame = tk.Frame(history_frame, bg="white", padx=20, pady=15)
+            order_frame.pack(fill="x", pady=8, padx=5)
+
+            # --------- ORDER ID ---------
+            tk.Label(
+                order_frame, text=f"Order #{order_id}", font=BUTTON_FONT, bg="white", fg=TEXT
+            ).pack(anchor="w")
+
+            # --------- DATE ---------
+            tk.Label(
+                order_frame, text=f"Date: {order['date']}", bg="white", fg=TEXT
+            ).pack(anchor="w")
+
+            # --------- ITEMS ---------
+            tk.Label(
+                order_frame, text="Items:", font=BUTTON_FONT, bg="white", fg=TEXT
+            ).pack(anchor="w",)
+
+            # --------- SUBTOTAL ---------
+            tk.Label(
+                order_frame, text=f"Subtotal: ₹{order['subtotal']:.2f}", bg="white", fg=TEXT
+            ).pack(anchor="w", pady=(10, 0))
+
+            # --------- GST ---------
+            tk.Label(
+                order_frame, text=f"GST: ₹{order['gst']:.2f}", bg="white", fg=TEXT
+            ).pack(anchor="w")
+
+            # --------- TOTAL ---------
+            tk.Label(
+                order_frame, text=f"Total: ₹{order['total']:.2f}", font=BUTTON_FONT, bg="white", fg=TEXT
+            ).pack(anchor="w")
+
+    #-----------HISTORY BUTTON-----------
+
+    def create_history_button(self):
+
+        if hasattr(self, "history_button"):
+            return
+
+        self.history_button = tk.Button(
+            self.category_frame,
+            text="📋\nOrder History",
+            command=self.view_history,
+            font=BUTTON_FONT,
+            bg=ACCENT,
+            fg="black",
+            activebackground=HEADER,
+            activeforeground="white",
+            relief="flat",
+            bd=0,
+            width=14,
+            height=4,
+            cursor="hand2"
         )
 
+        self.history_button.grid(
+            row=1,
+            column=6,
+            padx=10
+        )
+
+        self.button_hover(self.history_button)
     # --------- RUN APPLICATION ---------
 
     def run(self):

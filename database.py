@@ -48,3 +48,35 @@ def get_food_items(category, food_type=None):
 def food_items_from_db(category, food_type=None):
     rows = get_food_items(category, food_type)
     return rows
+
+def get_order_history():
+
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    query = """
+    SELECT
+        o.order_id,
+        o.order_date,
+        o.subtotal,
+        o.gst,
+        o.total,
+        f.name,
+        oi.quantity,
+        oi.price
+    FROM orders o
+    JOIN order_items oi
+        ON o.order_id = oi.order_id
+    JOIN food_items f
+        ON oi.food_id = f.food_id
+    ORDER BY o.order_date DESC, o.order_id DESC
+    """
+
+    cursor.execute(query)
+
+    rows = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    return rows

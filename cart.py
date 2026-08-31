@@ -10,7 +10,7 @@ cart = []
 
 # --------SHOW CART---------
 
-def show_cart(menu_frame, place_order):
+def show_cart(menu_frame, place_order , order_success=None):
 
     for widget in menu_frame.winfo_children():
         widget.destroy()
@@ -118,6 +118,9 @@ def show_cart(menu_frame, place_order):
 
             cart.clear()
 
+            if order_success:
+                order_success()
+
             messagebox.showinfo(
                 "Order Placed",
                 f"Your order has been placed successfully!\n\n"
@@ -125,7 +128,7 @@ def show_cart(menu_frame, place_order):
                 f"Total: ₹ {total:.2f}"
             )
 
-            show_cart(menu_frame, place_order)
+            show_cart(menu_frame, place_order, order_success)
 
         except Exception as error:
 
